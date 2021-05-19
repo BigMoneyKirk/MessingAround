@@ -1,10 +1,17 @@
 import { OnInit } from "@angular/core";
 import { NavItem } from "../enums/nav-item";
+import { Router } from '@angular/router';
+import { Injectable } from "@angular/core";
 
-export class NavigationService implements OnInit {
+@Injectable({
+  providedIn: 'root'
+})
+export class NavigationService {
     di = new Map<string, NavItem>();
+    currentURL: string;
 
-    ngOnInit() {
+    constructor(private router: Router) {
+        this.getCurrentPage();
     }
 
     createNavMap() {
@@ -19,4 +26,10 @@ export class NavigationService implements OnInit {
         this.createNavMap();
         return this.di.get(currentURL);
     }
+
+    async getCurrentPage() {
+        return this.router.events.subscribe(() => {
+          return this.currentURL = this.router.url;
+        });
+      }
 }

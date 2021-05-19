@@ -26,7 +26,6 @@ export class BibleService implements HttpInterceptor {
         'api-key': `${environment.bibleAPIKey}`
       }
     });
-    console.log("request", request.headers);
 
     return next.handle(request);
   }

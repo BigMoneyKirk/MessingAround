@@ -25,7 +25,7 @@ export class MainNavbarComponent implements OnInit {
   turnedOn: boolean = true;
   currentURL: string;
 
-  constructor(private global: GlobalService, private router: Router, private navService: NavigationService) { 
+  constructor(private global: GlobalService, private router: Router, private navService: NavigationService) {
   }
 
   ngOnInit() {
@@ -54,23 +54,26 @@ export class MainNavbarComponent implements OnInit {
     });
   }
 
-  getSelectedPageIcon() {
+  async getSelectedPageIcon() {
+    await this.navService.getCurrentPage();
+    this.currentURL = this.navService.currentURL;
     let navigation = document.querySelector('.navigation');
 
-    navigation.appendChild(document.createElement('div')).innerHTML = this.navService.getNavIcon('/home');
+    navigation.appendChild(document.createElement('div')).innerHTML = this.navService.getNavIcon(this.currentURL);
 
     navigation.addEventListener("mouseover", () => {
       navigation.removeChild(navigation.lastChild);
     })
 
     navigation.addEventListener("mouseout", () => {
+      this.currentURL = this.navService.currentURL;
+      console.log(this.currentURL);
       navigation.appendChild(document.createElement('div')).innerHTML = this.navService.getNavIcon(this.currentURL);
     })
   }
 
-  getCurrentPage() {
-    this.router.events.subscribe(() => {
-      this.currentURL = this.router.url;
-    });
+  async getCurrentPage() {
+    await this.navService.getCurrentPage();
+
   }
 }
